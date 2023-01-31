@@ -21,11 +21,11 @@ TODO: List what your package can do. Maybe include images, gifs, or videos.
 ## Getting started
 
 ```yaml
-	base_repository:
-		version: ^0.0.2
-		git:
-			url: git@github.com:dronn1k-org/base_repository.git
-			ref: master
+  base_repository:
+    version: ^0.0.2
+    git:
+      url: git@github.com:dronn1k-org/base_repository.git
+      ref: master
 ```
 
 ## Usage
