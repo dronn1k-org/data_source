@@ -25,14 +25,11 @@ abstract class BaseRepository {
       InterceptorsWrapper(onRequest: (request, handler) {
         request.baseUrl = _baseUrl;
         request.headers = _headers;
-        BaseRepoSettings.onRequest?.call(request, handler);
-        return handler.next(request);
+        return BaseRepoSettings.onRequest?.call(request, handler);
       }, onResponse: (response, handler) {
-        BaseRepoSettings.onResponse?.call(response, handler);
-        return handler.next(response);
+        return BaseRepoSettings.onResponse?.call(response, handler);
       }, onError: (error, handler) {
-        BaseRepoSettings.onError?.call(error, handler);
-        return handler.next(error);
+        return BaseRepoSettings.onError?.call(error, handler);
       });
 
   BaseRepository() {
