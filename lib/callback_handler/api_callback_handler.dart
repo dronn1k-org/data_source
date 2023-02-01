@@ -19,13 +19,13 @@ mixin ApiCallbackHandler {
 
   Future<ApiCallbackResult<DTO, ERRORS_TYPE>> request<ERRORS_TYPE>(
       ClientCallback callback) async {
-    misc?.onBeforeCallback?.call();
+    await misc?.onBeforeCallback?.call();
     try {
       return await resultHandler.call(await callback.call());
     } catch (e, st) {
       return await frontExceptionHandler.call(e, st);
     } finally {
-      misc?.onAfterCallback?.call();
+      await misc?.onAfterCallback?.call();
     }
   }
 }
