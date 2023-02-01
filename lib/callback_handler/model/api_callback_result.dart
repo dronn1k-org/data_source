@@ -1,12 +1,6 @@
 library base_repository;
 
-enum ApiCallbackStatus {
-  success,
-
-  backException,
-
-  frontException,
-}
+import 'package:base_repository/callback_handler/enum/api_callback_status.dart';
 
 class ApiCallbackResult<RESULT_TYPE, ERRORS_TYPE> {
   final ApiCallbackStatus callbackStatus;
