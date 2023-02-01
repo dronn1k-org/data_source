@@ -5,10 +5,8 @@ import 'package:base_repository/callback_handler/api_callback_handler.dart';
 import 'package:base_repository/enum/api_url.dart';
 import 'package:base_repository/typedef/headers_type.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
 abstract class BaseRepository with ApiCallbackHandler {
-  @protected
   final Dio dio = Dio();
 
   String get _baseUrl {
