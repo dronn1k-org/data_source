@@ -11,19 +11,19 @@
 //   });
 // }
 
-import 'dart:async';
 
-import 'package:base_repository/callback_handler/api_callback_handler.dart';
-import 'package:base_repository/callback_handler/interface/api_endpoint.dart';
-import 'package:base_repository/callback_handler/interface/dto.dart';
-import 'package:base_repository/callback_handler/model/api_callback_result.dart';
-import 'package:retrofit/retrofit.dart';
 
-abstract class General<T> implements BaseApiEndpoint<T> {}
+// class General<T extends DTO> extends BaseApiEndpoint {}
 
-FutureOr<ApiCallbackResult<DTO, ERRORS_TYPE>> _apiHandler<ERRORS_TYPE>(
-    HttpResponse<General<DTO>> response) {}
+// FutureOr<ApiCallbackResult<DTO, ERRORS_TYPE>>
+//     _apiHandler<T extends BaseApiEndpoint, ERRORS_TYPE>(
+//         HttpResponse<T> result) async {}
 
-void main() {
-  ApiCallbackHandler.resultHandler = _apiHandler;
-}
+// void main() {
+//   ApiCallbackHandler.resultHandler = _apiHandler;
+
+//   test(temp);
+// }
+
+// void test<T extends BaseApiEndpoint>(void Function(T) func) {}
+// void temp(General<DTO> temp) {}
