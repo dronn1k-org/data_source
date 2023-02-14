@@ -21,7 +21,7 @@ abstract class BaseRepoSettings {
 
   static BaseOptions _baseDioOptions = BaseOptions(
     validateStatus: (_) => true,
-    connectTimeout: 15000,
+    connectTimeout: const Duration(seconds: 15),
   );
   static BaseOptions get baseDioOptions => _baseDioOptions;
 
