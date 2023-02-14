@@ -3,4 +3,4 @@ library base_repository;
 
 import 'package:base_repository/callback_handler/interface/dto.dart';
 
-abstract class BaseApiEndpoint<T extends DTO> implements DTO {}
+abstract class BaseApiEndpoint<T> implements DTO {}
