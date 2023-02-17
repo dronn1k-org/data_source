@@ -13,17 +13,33 @@
 
 
 
-// class General<T extends DTO> extends BaseApiEndpoint {}
-
-// FutureOr<ApiCallbackResult<DTO, ERRORS_TYPE>>
-//     _apiHandler<T extends BaseApiEndpoint, ERRORS_TYPE>(
-//         HttpResponse<T> result) async {}
-
-// void main() {
-//   ApiCallbackHandler.resultHandler = _apiHandler;
-
-//   test(temp);
+// class General<T extends DTO> extends BaseApiEndpoint {
+//   String? success;
+//   T? data;
+//   String? message;
 // }
 
-// void test<T extends BaseApiEndpoint>(void Function(T) func) {}
-// void temp(General<DTO> temp) {}
+// class TemplateEntity implements DTO {}
+
+// void main() {}
+
+// abstract class GeneralRepository extends BaseRepository<General<DTO>, String> {
+//   @override
+//   final RepositoryCallbackHandler<General<DTO>, String> callbackHandler =
+//       RepositoryCallbackHandler(
+//     onResponse: (HttpResponse<General<DTO>> callbackResult) async {
+//       return const ApiCallbackResult<DTO, String>(
+//           callbackStatus: ApiCallbackStatus.success);
+//     },
+//     frontExceptionHandler:
+//         <String>(Object exception, StackTrace stackTrace) async {
+//       return ApiCallbackResult<DTO, String>(
+//           callbackStatus: ApiCallbackStatus.frontException);
+//     },
+//   );
+// }
+
+// class TemplateRepo extends GeneralRepository {
+//   Future<ApiCallbackResult<TemplateEntity, String>> temp() =>
+//       request(() => null);
+// }
