@@ -3,13 +3,13 @@ library base_repository;
 
 import 'dart:async';
 
-import 'package:base_repository/callback_handler/interface/api_endpoint.dart';
-import 'package:base_repository/callback_handler/interface/dto.dart';
-import 'package:base_repository/callback_handler/model/api_callback_result.dart';
+import 'package:base_repository/interface/base_response_body.dart';
+import 'package:base_repository/interface/dto.dart';
+import 'package:base_repository/callback_handler/api_callback_result.dart';
 import 'package:base_repository/callback_handler/typedef/client_callback_result_type.dart';
 import 'package:base_repository/callback_handler/typedef/client_callback_type.dart';
 
-class RepositoryCallbackHandler<BASE_TYPE extends BaseApiEndpoint,
+class RepositoryCallbackHandler<BASE_TYPE extends BaseResponseBody,
     ERRORS_TYPE> {
   final FutureOr<void> Function()? _onBeforeCallback;
 
