@@ -21,20 +21,91 @@ TODO: List what your package can do. Maybe include images, gifs, or videos.
 ## Getting started
 
 ```yaml
-  base_repository:
-    version: ^0.0.5
-    git:
-      url: git@github.com:dronn1k-org/base_repository.git
-      ref: master
+base_repository:
+  version: ^0.1.0
+  git:
+    url: git@github.com:dronn1k-org/base_repository.git
+    ref: master
 ```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+### Specify your own ApiUrls
 
 ```dart
-const like = 'sample';
+enum ProjectApiUrl implements ApiUrl {
+  prod('https://prod.template.com', _prod),
+  dev('https://dev.template.com', _dev);
+
+  const ProjectApiUrl(this.url, this.title);
+
+  @override
+  final String url;
+  @override
+  final String Function() title;
+}
+
+String _prod() => 'PROD';
+String _dev() => 'DEV';
+```
+
+### Specify General response body (if needed)
+
+```dart
+class General<T extends DTO> extends BaseResponseBody {
+  String? success;
+  T? data;
+  String? message;
+}
+```
+
+### Setting up yor General Repository
+
+```dart
+class GeneralRepository extends BaseRepository<General<DTO>, String> {
+  @override
+  late RepositoryCallbackHandler<General<DTO>, String> callbackHandler =
+      RepositoryCallbackHandler(
+    onResponse: _onResponse,
+    frontExceptionHandler: _frontExceptionHandler,
+  );
+
+  FutureOr<ApiCallbackResult<DTO, String>> _onResponse(
+      ClientCallbackResult<General<DTO>> callbackResult) {
+    return const ApiCallbackResult<DTO, String>(
+        callbackStatus: ApiCallbackStatus.success);
+  }
+
+  FutureOr<ApiCallbackResult<DTO, String>> _frontExceptionHandler<String>(
+      Object exception, StackTrace stackTrace) {
+    return ApiCallbackResult<DTO, String>(
+        callbackStatus: ApiCallbackStatus.frontException);
+  }
+
+  @override
+  covariant ProjectApiUrl currentUrl = ProjectApiUrl.prod;
+
+  @override
+  HeadersType headers = {
+    'accept' : 'application/json',
+    'content' : 'application/json',
+  };
+
+  @override
+  OnErrorDioInterceptor onError =(error, handler) {
+    return handler.next(error);
+  };
+
+  @override
+  OnRequestDioInterceptor onRequest =(request, handler) {
+    return handler.next(request);
+  };
+
+  @override
+  OnResponseDioInterceptor onResponse =(response, handler) {
+    return handler.next(response);
+  };
+}
 ```
 
 ## Additional information
