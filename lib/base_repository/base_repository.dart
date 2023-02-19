@@ -1,22 +1,21 @@
 library base_repository;
 
+import 'package:base_repository/callback_handler/base_callback_result.dart';
 import 'package:base_repository/interface/base_response_body.dart';
 import 'package:base_repository/callback_handler/repository_callback_handler.dart';
 import 'package:base_repository/callback_handler/typedef/client_callback_type.dart';
 import 'package:base_repository/interface/api_url.dart';
 import 'package:base_repository/base_repository/typedef/headers_type.dart';
 import 'package:base_repository/base_repository/typedef/interceptors_types.dart';
+import 'package:base_repository/interface/dto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-
-import '../interface/dto.dart';
-import '../callback_handler/api_callback_result.dart';
 
 abstract class BaseRepository<BASE_TYPE extends BaseResponseBody, ERRORS_TYPE> {
   final Dio dio = Dio();
 
   @protected
-  abstract ApiUrl currentUrl;
+  abstract final ApiUrl currentUrl;
 
   String get _baseUrl => currentUrl.url;
 
@@ -58,7 +57,7 @@ abstract class BaseRepository<BASE_TYPE extends BaseResponseBody, ERRORS_TYPE> {
   abstract RepositoryCallbackHandler<BASE_TYPE, ERRORS_TYPE> callbackHandler;
 
   @protected
-  Future<ApiCallbackResult<DTO, ERRORS_TYPE>> Function(
+  Future<BaseCallbackResult<DTO, ERRORS_TYPE>> Function(
           ClientCallback<BASE_TYPE> callback)
       get request => callbackHandler.request;
 }
