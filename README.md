@@ -22,10 +22,8 @@ TODO: List what your package can do. Maybe include images, gifs, or videos.
 
 ```yaml
 base_repository:
-  version: ^0.1.0
-  git:
-    url: git@github.com:dronn1k-org/base_repository.git
-    ref: master
+  version: ^0.1.1
+  git: git@github.com:dronn1k-org/base_repository.git
 ```
 
 ## Usage
@@ -70,30 +68,16 @@ class GeneralCbResult<T> extends BaseCallbackResult<T, String> {
 ### Setting up your General Repository
 
 ```dart
-class GeneralRepository extends BaseRepository<GeneralResponseBody<DTO>, String> {
+class GeneralRepository extends BaseRepository<GeneralResponseBody<DTO>, String,
+    GeneralCbResult<DTO>> {
   @override
-  late RepositoryCallbackHandler<GeneralResponseBody<DTO>, String> callbackHandler =
-      RepositoryCallbackHandler(
-    onResponse: _onResponse,
-    frontExceptionHandler: _frontExceptionHandler,
-  );
-
-  // With modified callback result
-  FutureOr<GeneralCbResult<DTO>> _onResponse(
-      ClientCallbackResult<GeneralResponseBody<DTO>> callbackResult) {
-    return const GeneralCbResult<DTO>(
-        callbackStatus: ApiCallbackStatus.success);
-  }
-
-  // Without modified callback result
-  FutureOr<BaseCallbackResult<DTO, String>> _frontExceptionHandler(
-      Object exception, StackTrace stackTrace) {
-    return const BaseCallbackResult<DTO, String>(
-        callbackStatus: ApiCallbackStatus.frontException);
+  Future<GeneralCbResult<T>> request<T extends DTO>(
+      ClientCallback<GeneralResponseBody<DTO>> callback) async {
+    return GeneralCbResult<T>(callbackStatus: ApiCallbackStatus.success);
   }
 
   @override
-  covariant ProjectApiUrl currentUrl = ProjectApiUrl.prod;
+  ProjectApiUrl currentUrl = ProjectApiUrl.prod;
 
   @override
   HeadersType headers = {

@@ -15,19 +15,26 @@ import 'dart:async';
 
 import 'package:base_repository/base_repository/base_repository.dart';
 import 'package:base_repository/callback_handler/enum/api_callback_status.dart';
-import 'package:base_repository/callback_handler/typedef/client_callback_result_type.dart';
+import 'package:base_repository/callback_handler/typedef/client_callback_type.dart';
+import 'package:base_repository/callback_handler/typedef/json_type.dart';
 import 'package:base_repository/interface/base_response_body.dart';
 import 'package:base_repository/interface/dto.dart';
 import 'package:base_repository/callback_handler/base_callback_result.dart';
-import 'package:base_repository/callback_handler/repository_callback_handler.dart';
 import 'package:base_repository/interface/api_url.dart';
 import 'package:base_repository/base_repository/typedef/interceptors_types.dart';
 import 'package:base_repository/base_repository/typedef/headers_type.dart';
+import 'package:retrofit/dio.dart';
 
 class GeneralResponseBody<T extends DTO> extends BaseResponseBody {
   String? success;
   T? data;
   String? message;
+}
+
+class User extends DTO {
+  final int id;
+  User({required this.id});
+  factory User.fromJson(JSON_TYPE json) => User(id: 0);
 }
 
 class GeneralCbResult<T> extends BaseCallbackResult<T, String> {
@@ -39,31 +46,16 @@ class GeneralCbResult<T> extends BaseCallbackResult<T, String> {
   });
 }
 
-class GeneralRepository
-    extends BaseRepository<GeneralResponseBody<DTO>, String> {
+class GeneralRepository extends BaseRepository<GeneralResponseBody<DTO>, String,
+    GeneralCbResult<DTO>> {
   @override
-  late RepositoryCallbackHandler<GeneralResponseBody<DTO>, String>
-      callbackHandler = RepositoryCallbackHandler(
-    onResponse: _onResponse,
-    frontExceptionHandler: _frontExceptionHandler,
-  );
-
-  // With modified callback result
-  FutureOr<GeneralCbResult<DTO>> _onResponse(
-      ClientCallbackResult<GeneralResponseBody<DTO>> callbackResult) {
-    return const GeneralCbResult<DTO>(
-        callbackStatus: ApiCallbackStatus.success);
-  }
-
-  // Without modified callback result
-  FutureOr<BaseCallbackResult<DTO, String>> _frontExceptionHandler(
-      Object exception, StackTrace stackTrace) {
-    return const BaseCallbackResult<DTO, String>(
-        callbackStatus: ApiCallbackStatus.frontException);
+  Future<GeneralCbResult<T>> request<T extends DTO>(
+      ClientCallback<GeneralResponseBody<DTO>> callback) async {
+    return GeneralCbResult<T>(callbackStatus: ApiCallbackStatus.success);
   }
 
   @override
-  covariant ProjectApiUrl currentUrl = ProjectApiUrl.prod;
+  ProjectApiUrl currentUrl = ProjectApiUrl.prod;
 
   @override
   HeadersType headers = {
@@ -94,6 +86,18 @@ enum ProjectApiUrl implements ApiUrl {
 
   @override
   final String url;
+}
+
+abstract class TemplateClient {
+  Future<HttpResponse<GeneralResponseBody<User>>> template();
+}
+
+class TemplateRepo extends GeneralRepository {
+  late TemplateClient client;
+
+  Future<GeneralCbResult<User>> template() {
+    return request(() => client.template());
+  }
 }
 
 void main() {}
