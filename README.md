@@ -21,20 +21,101 @@ TODO: List what your package can do. Maybe include images, gifs, or videos.
 ## Getting started
 
 ```yaml
-  base_repository:
-    version: ^0.0.5
-    git:
-      url: git@github.com:dronn1k-org/base_repository.git
-      ref: master
+base_repository:
+  version: ^0.1.0
+  git:
+    url: git@github.com:dronn1k-org/base_repository.git
+    ref: master
 ```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+### Specify your own ApiUrls
 
 ```dart
-const like = 'sample';
+enum ProjectApiUrl implements ApiUrl {
+  prod('https://prod.template.com',),
+  dev('https://dev.template.com');
+
+  const ProjectApiUrl(this.url);
+
+  @override
+  final String url;
+}
+```
+
+### Specify your response body (if needed)
+
+```dart
+class GeneralResponseBody<T extends DTO> extends BaseResponseBody {
+  String? success;
+  T? data;
+  String? message;
+}
+```
+
+### Specify your Callback result
+
+```dart
+class GeneralCbResult<T> extends BaseCallbackResult<T, String> {
+  const GeneralCbResult({
+    required super.callbackStatus,
+    super.statusCode,
+    super.data,
+    super.errors,
+  });
+}
+```
+
+### Setting up your General Repository
+
+```dart
+class GeneralRepository extends BaseRepository<GeneralResponseBody<DTO>, String> {
+  @override
+  late RepositoryCallbackHandler<GeneralResponseBody<DTO>, String> callbackHandler =
+      RepositoryCallbackHandler(
+    onResponse: _onResponse,
+    frontExceptionHandler: _frontExceptionHandler,
+  );
+
+  // With modified callback result
+  FutureOr<GeneralCbResult<DTO>> _onResponse(
+      ClientCallbackResult<GeneralResponseBody<DTO>> callbackResult) {
+    return const GeneralCbResult<DTO>(
+        callbackStatus: ApiCallbackStatus.success);
+  }
+
+  // Without modified callback result
+  FutureOr<BaseCallbackResult<DTO, String>> _frontExceptionHandler(
+      Object exception, StackTrace stackTrace) {
+    return const BaseCallbackResult<DTO, String>(
+        callbackStatus: ApiCallbackStatus.frontException);
+  }
+
+  @override
+  covariant ProjectApiUrl currentUrl = ProjectApiUrl.prod;
+
+  @override
+  HeadersType headers = {
+    'accept': 'application/json',
+    'content': 'application/json',
+  };
+
+  @override
+  OnErrorDioInterceptor onError = (error, handler) {
+    return handler.next(error);
+  };
+
+  @override
+  OnRequestDioInterceptor onRequest = (request, handler) {
+    return handler.next(request);
+  };
+
+  @override
+  OnResponseDioInterceptor onResponse = (response, handler) {
+    return handler.next(response);
+  };
+}
 ```
 
 ## Additional information
