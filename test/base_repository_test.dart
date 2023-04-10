@@ -40,7 +40,6 @@ class User extends DTO {
 class GeneralCbResult<T> extends BaseCallbackResult<T, String> {
   const GeneralCbResult({
     required super.callbackStatus,
-    super.statusCode,
     super.data,
     super.errors,
   });
@@ -51,7 +50,10 @@ class GeneralRepository extends BaseRepository<GeneralResponseBody<DTO>, String,
   @override
   Future<GeneralCbResult<T>> request<T extends DTO>(
       ClientCallback<GeneralResponseBody<DTO>> callback) async {
-    return GeneralCbResult<T>(callbackStatus: ApiCallbackStatus.success);
+    return GeneralCbResult<T>(
+      callbackStatus: ApiCallbackStatus.success,
+      data: (await callback()).data.data as T,
+    );
   }
 
   @override

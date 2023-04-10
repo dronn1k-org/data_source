@@ -73,7 +73,10 @@ class GeneralRepository extends BaseRepository<GeneralResponseBody<DTO>, String,
   @override
   Future<GeneralCbResult<T>> request<T extends DTO>(
       ClientCallback<GeneralResponseBody<DTO>> callback) async {
-    return GeneralCbResult<T>(callbackStatus: ApiCallbackStatus.success);
+    return GeneralCbResult<T>(
+      callbackStatus: ApiCallbackStatus.success,
+      data: (await callback()).data.data as T,
+    );
   }
 
   @override

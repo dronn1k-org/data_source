@@ -12,13 +12,10 @@ class BaseCallbackResult<RESULT_TYPE, ERRORS_TYPE> {
   final RESULT_TYPE? data;
   final ERRORS_TYPE? errors;
 
-  final int? statusCode;
-
   @mustCallSuper
   const BaseCallbackResult({
     required this.callbackStatus,
     this.data,
     this.errors,
-    this.statusCode,
   });
 }
