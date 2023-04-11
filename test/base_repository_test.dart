@@ -14,13 +14,13 @@
 import 'dart:async';
 
 import 'package:base_repository/base_repository/base_repository.dart';
-import 'package:base_repository/callback_handler/enum/api_callback_status.dart';
+import 'package:base_repository/callback_handler/enum/callback_status.dart';
 import 'package:base_repository/callback_handler/typedef/client_callback_type.dart';
 import 'package:base_repository/callback_handler/typedef/json_type.dart';
 import 'package:base_repository/interface/base_response_body.dart';
 import 'package:base_repository/interface/dto.dart';
 import 'package:base_repository/callback_handler/base_callback_result.dart';
-import 'package:base_repository/interface/api_url.dart';
+import 'package:base_repository/remote_data_source/interface/api_url.dart';
 import 'package:base_repository/base_repository/typedef/interceptors_types.dart';
 import 'package:base_repository/base_repository/typedef/headers_type.dart';
 import 'package:retrofit/dio.dart';
@@ -29,12 +29,24 @@ class GeneralResponseBody<T extends DTO> extends BaseResponseBody {
   String? success;
   T? data;
   String? message;
+
+  @override
+  JSON_TYPE toJson() {
+    // TODO: implement toJson
+    throw UnimplementedError();
+  }
 }
 
 class User extends DTO {
   final int id;
   User({required this.id});
   factory User.fromJson(JSON_TYPE json) => User(id: 0);
+
+  @override
+  JSON_TYPE toJson() {
+    // TODO: implement toJson
+    throw UnimplementedError();
+  }
 }
 
 class GeneralCbResult<T> extends BaseCallbackResult<T, String> {
@@ -51,7 +63,7 @@ class GeneralRepository extends BaseRepository<GeneralResponseBody<DTO>, String,
   Future<GeneralCbResult<T>> request<T extends DTO>(
       ClientCallback<GeneralResponseBody<DTO>> callback) async {
     return GeneralCbResult<T>(
-      callbackStatus: ApiCallbackStatus.success,
+      callbackStatus: CallbackStatus.success,
       data: (await callback()).data.data as T,
     );
   }
@@ -84,7 +96,7 @@ class GeneralRepository extends BaseRepository<GeneralResponseBody<DTO>, String,
 enum ProjectApiUrl implements ApiUrl {
   prod('asdas');
 
-  const ProjectApiUrl(this.url);
+  const ProjectApiUrl(String address) : url = address;
 
   @override
   final String url;

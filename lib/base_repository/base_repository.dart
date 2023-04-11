@@ -3,7 +3,7 @@ library base_repository;
 import 'package:base_repository/callback_handler/base_callback_result.dart';
 import 'package:base_repository/interface/base_response_body.dart';
 import 'package:base_repository/callback_handler/typedef/client_callback_type.dart';
-import 'package:base_repository/interface/api_url.dart';
+import 'package:base_repository/remote_data_source/interface/api_url.dart';
 import 'package:base_repository/base_repository/typedef/headers_type.dart';
 import 'package:base_repository/base_repository/typedef/interceptors_types.dart';
 import 'package:base_repository/interface/dto.dart';
