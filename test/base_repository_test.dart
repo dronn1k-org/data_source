@@ -15,9 +15,9 @@ import 'dart:async';
 
 import 'package:base_repository/callback_handler/misc/enum_list.dart';
 import 'package:base_repository/callback_handler/misc/typedef_list.dart';
-import 'package:base_repository/remote_repository/misc/typedef_list.dart';
 import 'package:base_repository/repository/domain/local_repository/misc/enum_list.dart';
 import 'package:base_repository/repository/domain/local_repository/model/box_type.dart';
+import 'package:base_repository/repository/domain/remote_repository/misc/typedef_list.dart';
 import 'package:base_repository/repository/domain/remote_repository/remote_repository.dart';
 import 'package:base_repository/repository/domain/model/dto.dart';
 import 'package:base_repository/callback_handler/model/base_callback_result.dart';
