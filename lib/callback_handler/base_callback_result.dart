@@ -3,7 +3,7 @@ library base_repository;
 import 'package:base_repository/callback_handler/enum/callback_status.dart';
 import 'package:flutter/cupertino.dart';
 
-class BaseCallbackResult<RESULT_TYPE, ERRORS_TYPE> {
+class CallbackResult<RESULT_TYPE, ERRORS_TYPE> {
   final CallbackStatus callbackStatus;
 
   bool get isSuccess => callbackStatus == CallbackStatus.success;
@@ -13,7 +13,7 @@ class BaseCallbackResult<RESULT_TYPE, ERRORS_TYPE> {
   final ERRORS_TYPE? errors;
 
   @mustCallSuper
-  const BaseCallbackResult({
+  const CallbackResult({
     required this.callbackStatus,
     this.data,
     this.errors,

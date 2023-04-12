@@ -3,4 +3,4 @@ library base_repository;
 
 import 'package:base_repository/interface/dto.dart';
 
-abstract class BaseResponseBody implements DTO {}
+abstract class ResponseBody implements DTO {}

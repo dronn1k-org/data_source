@@ -1,10 +1,11 @@
 import 'package:base_repository/interface/dto.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
-abstract class LocalData extends DTO {
-  final String uuid;
+abstract class DTOWithLocalIdentifier<IdentifierType> extends DTO {
+  final IdentifierType localId;
 
-  LocalData({
-    String? uuid,
-  }) : uuid = uuid ?? const Uuid().v4();
+  @mustCallSuper
+  const DTOWithLocalIdentifier({
+    required this.localId,
+  });
 }

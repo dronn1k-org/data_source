@@ -1,8 +1,8 @@
 library base_repository;
 
 import 'package:base_repository/callback_handler/base_callback_result.dart';
-import 'package:base_repository/interface/base_response_body.dart';
 import 'package:base_repository/callback_handler/typedef/client_callback_type.dart';
+import 'package:base_repository/interface/data_source.dart';
 import 'package:base_repository/remote_data_source/interface/api_url.dart';
 import 'package:base_repository/base_repository/typedef/headers_type.dart';
 import 'package:base_repository/base_repository/typedef/interceptors_types.dart';
@@ -10,14 +10,12 @@ import 'package:base_repository/interface/dto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
-abstract class BaseRepository<BASE_TYPE extends BaseResponseBody, ERRORS_TYPE,
-    CB_RESULT_TYPE extends BaseCallbackResult<DTO, ERRORS_TYPE>> {
+abstract class RemoteRepository<
+    EntityType extends DTO,
+    ErrorsType,
+    CallbackResultType extends CallbackResult<DTO, ErrorsType>,
+    RepoSubType extends ApiUrl> extends Repository<RepoSubType> {
   final Dio dio = Dio();
-
-  @protected
-  abstract final ApiUrl currentUrl;
-
-  String get _baseUrl => currentUrl.url;
 
   @protected
   abstract HeadersType headers;
@@ -38,7 +36,7 @@ abstract class BaseRepository<BASE_TYPE extends BaseResponseBody, ERRORS_TYPE,
 
   Interceptor get _interceptor =>
       InterceptorsWrapper(onRequest: (request, handler) {
-        request.baseUrl = _baseUrl;
+        request.baseUrl = subType.url;
         request.headers = headers;
         return onRequest.call(request, handler);
       }, onResponse: (response, handler) {
@@ -48,12 +46,17 @@ abstract class BaseRepository<BASE_TYPE extends BaseResponseBody, ERRORS_TYPE,
       });
 
   @mustCallSuper
-  BaseRepository() {
+  RemoteRepository() {
     dio.options = baseDioOptions;
     dio.interceptors.add(_interceptor);
   }
 
   @protected
-  Future<CB_RESULT_TYPE> request<T extends DTO>(
-      ClientCallback<BASE_TYPE> callback);
+  Future<CallbackResultType> request<T extends DTO>(
+      ClientCallback<EntityType> callback);
+
+  // @override
+  // Future<void> changeSubType(ApiUrl newSubType) async {
+  //   super.changeSubType(newSubType);
+  // }
 }

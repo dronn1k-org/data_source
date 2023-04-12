@@ -1,3 +1,5 @@
-abstract class DataAddress<ADDRESS_TYPE> {
-  const DataAddress(ADDRESS_TYPE address);
+abstract class DataSubType<SUB_TYPE> {
+  final SUB_TYPE typeName;
+
+  const DataSubType(this.typeName);
 }

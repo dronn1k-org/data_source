@@ -1,6 +1,8 @@
-import 'package:base_repository/callback_handler/base_callback_result.dart';
+import 'dart:async';
+
 import 'package:base_repository/callback_handler/typedef/json_type.dart';
 import 'package:base_repository/extension/list_extension.dart';
+import 'package:base_repository/interface/data_source.dart';
 import 'package:base_repository/local_data_source/enum/entity_exception_type.dart';
 import 'package:base_repository/local_data_source/exception/entity_exception.dart';
 import 'package:base_repository/local_data_source/interface/box_type.dart';
@@ -8,23 +10,26 @@ import 'package:base_repository/local_data_source/model/local_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
-abstract class BaseLocalDataSource<MODEL_TYPE extends LocalData> {
+abstract class LocalRepository<
+    MODEL_TYPE extends DTOWithLocalIdentifier<IdentifierType>,
+    IdentifierType> extends Repository<BoxType> {
   @protected
   abstract final String boxName;
 
-  static BoxType? _currentType;
+  @override
+  abstract final BoxType subType;
 
-  set currentType(BoxType newType) {}
-
-  String get _boxFullName => '$boxName-${_currentType?.type}';
+  String get _boxFullName => '$boxName-${subType.typeName}';
 
   late Box<JSON_TYPE> _box;
 
   @protected
   late Future<void> ready;
 
+  final _subTypeChangerCompleter = Completer<void>();
+
   @mustCallSuper
-  BaseLocalDataSource() {
+  LocalRepository() {
     ready = _initAsync();
   }
 
@@ -38,16 +43,16 @@ abstract class BaseLocalDataSource<MODEL_TYPE extends LocalData> {
   @protected
   Future<void> create(MODEL_TYPE entity) async {
     await ready;
-    if (_box.containsKey(entity.uuid)) {
+    if (_box.containsKey(entity.localId)) {
       throw const EntityException(EntityExceptionType.alreadyExists);
     }
-    return _box.put(entity.uuid, entity.toJson());
+    return _box.put(entity.localId, entity.toJson());
   }
 
   @protected
-  Future<MODEL_TYPE?> read(String uuid) async {
+  Future<MODEL_TYPE> read(IdentifierType id) async {
     await ready;
-    final mapEntity = _box.get(uuid);
+    final mapEntity = _box.get(id);
     if (mapEntity == null) {
       throw const EntityException(EntityExceptionType.doNotExists);
     }
@@ -61,16 +66,16 @@ abstract class BaseLocalDataSource<MODEL_TYPE extends LocalData> {
   @protected
   Future<void> update(MODEL_TYPE entity) async {
     await ready;
-    if (!_box.containsKey(entity.uuid)) {
+    if (!_box.containsKey(entity.localId)) {
       throw const EntityException(EntityExceptionType.doNotExists);
     }
-    return _box.put(entity.uuid, entity.toJson());
+    return _box.put(entity.localId, entity.toJson());
   }
 
   @protected
-  Future<void> delete(String uuid) async {
+  Future<void> delete(IdentifierType id) async {
     await ready;
-    _box.delete(uuid);
+    _box.delete(id);
   }
 
   @protected
@@ -93,6 +98,13 @@ abstract class BaseLocalDataSource<MODEL_TYPE extends LocalData> {
     return resultList.sublist(pageNumber * limit, (pageNumber + 1) * limit);
   }
 
-  Future<BaseCallbackResult<RESULT_TYPE, ERRORS_TYPE>>
-      request<RESULT_TYPE, ERRORS_TYPE>() {}
+  @override
+  Future<void> changeSubType(BoxType newSubType) async {
+    ready = _subTypeChangerCompleter.future;
+    _box.flush();
+    _box.close();
+    super.changeSubType(newSubType);
+    _box = await Hive.openBox(_boxFullName);
+    _subTypeChangerCompleter.complete();
+  }
 }

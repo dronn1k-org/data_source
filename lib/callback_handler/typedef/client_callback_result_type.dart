@@ -1,6 +1,6 @@
 library base_repository;
 
-import 'package:base_repository/interface/base_response_body.dart';
+import 'package:base_repository/interface/dto.dart';
 import 'package:retrofit/dio.dart';
 
-typedef ClientCallbackResult<T extends BaseResponseBody> = HttpResponse<T>;
+typedef ClientCallbackResult<T extends DTO> = HttpResponse<T>;

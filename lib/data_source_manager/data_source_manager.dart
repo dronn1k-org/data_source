@@ -1,3 +1,4 @@
+import 'package:base_repository/interface/data_address.dart';
 import 'package:base_repository/interface/data_source.dart';
 
 class DataSourceManager {
@@ -5,13 +6,30 @@ class DataSourceManager {
   static final instance = DataSourceManager._();
   factory DataSourceManager() => instance;
 
-  final List<DataSource> _activeDataSourceList = [];
+  final List<Repository> _activeDataSourceList = [];
 
-  T put<T extends DataSource>(T Function() constructor) =>
-      _activeDataSourceList.firstWhere(
+  T put<T extends Repository>(T Function() constructor) {
+    try {
+      return _activeDataSourceList.firstWhere(
         (element) => element is T,
-        orElse: constructor,
       ) as T;
+    } catch (e) {
+      final dataSource = constructor();
+      _activeDataSourceList.add(dataSource);
+      return dataSource;
+    }
+  }
 
-  void dispose<T extends DataSource>() {}
+  bool dispose<T extends Repository>() {
+    final lengthBeforeRemoving = _activeDataSourceList.length;
+    _activeDataSourceList.removeWhere((element) => element is T);
+    final lengthAfterRemoving = _activeDataSourceList.length;
+    return lengthBeforeRemoving - lengthAfterRemoving == 1;
+  }
+
+  void changeSubType(DataSubType newSubType) {
+    for (var element in _activeDataSourceList) {
+      element.changeSubType(newSubType);
+    }
+  }
 }
