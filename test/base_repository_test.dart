@@ -13,19 +13,18 @@
 
 import 'dart:async';
 
-import 'package:base_repository/base_repository/base_repository.dart';
-import 'package:base_repository/callback_handler/enum/callback_status.dart';
-import 'package:base_repository/callback_handler/typedef/client_callback_type.dart';
-import 'package:base_repository/callback_handler/typedef/json_type.dart';
-import 'package:base_repository/interface/dto.dart';
-import 'package:base_repository/callback_handler/base_callback_result.dart';
-import 'package:base_repository/local_data_source/enum/entity_exception_type.dart';
-import 'package:base_repository/local_data_source/exception/entity_exception.dart';
-import 'package:base_repository/local_data_source/local_repository.dart';
-import 'package:base_repository/local_data_source/model/local_data.dart';
-import 'package:base_repository/remote_data_source/interface/api_url.dart';
-import 'package:base_repository/base_repository/typedef/interceptors_types.dart';
-import 'package:base_repository/base_repository/typedef/headers_type.dart';
+import 'package:base_repository/callback_handler/misc/enum_list.dart';
+import 'package:base_repository/callback_handler/misc/typedef_list.dart';
+import 'package:base_repository/remote_repository/misc/typedef_list.dart';
+import 'package:base_repository/repository/domain/local_repository/misc/enum_list.dart';
+import 'package:base_repository/repository/domain/local_repository/model/box_type.dart';
+import 'package:base_repository/repository/domain/remote_repository/remote_repository.dart';
+import 'package:base_repository/repository/domain/model/dto.dart';
+import 'package:base_repository/callback_handler/model/base_callback_result.dart';
+import 'package:base_repository/repository/domain/local_repository/exception/entity_exception.dart';
+import 'package:base_repository/repository/domain/local_repository/local_repository.dart';
+import 'package:base_repository/repository/domain/local_repository/model/local_data.dart';
+import 'package:base_repository/repository/domain/remote_repository/model/api_url.dart';
 import 'package:retrofit/dio.dart';
 
 class GeneralResponseBody<T extends DTO> extends DTO {
@@ -34,7 +33,7 @@ class GeneralResponseBody<T extends DTO> extends DTO {
   String? message;
 
   @override
-  JSON_TYPE toJson() => {
+  Json toJson() => {
         'success': success,
         'data': data,
         'message': message,
@@ -45,13 +44,13 @@ class User extends DTOWithLocalIdentifier<int> {
   final int id;
   User({required this.id, required super.localId});
 
-  factory User.fromJson(JSON_TYPE json) => User(
+  factory User.fromJson(Json json) => User(
         id: json['id'],
         localId: json['localId'],
       );
 
   @override
-  JSON_TYPE toJson() => {
+  Json toJson() => {
         'id': id,
       };
 }
@@ -76,11 +75,11 @@ enum ProjectApiUrl implements ApiUrl {
   final String url;
 }
 
-class BaseRemoteRepository extends RemoteRepository<GeneralResponseBody<DTO>,
-    String, BaseCbResult<DTO>, ProjectApiUrl> {
+class BaseRemoteRepository
+    extends RemoteRepository<GeneralResponseBody, ProjectApiUrl> {
   @override
   Future<BaseCbResult<T>> request<T extends DTO>(
-      ClientCallback<GeneralResponseBody<DTO>> callback) async {
+      ClientCallback<GeneralResponseBody> callback) async {
     return BaseCbResult<T>(
       callbackStatus: CallbackStatus.success,
       data: (await callback()).data.data as T,
@@ -143,13 +142,13 @@ class UserRemoteRepository extends BaseRemoteRepository
       request(() => _client.getUser(payload.id));
 }
 
-class UserLocalRepository extends LocalRepository<User, int>
+class UserLocalRepository extends LocalRepository<User, int, BoxType>
     implements UserRepository {
   @override
   final String boxName = 'user';
 
   @override
-  User fromJson(JSON_TYPE json) => User.fromJson(json);
+  User fromJson(Json json) => User.fromJson(json);
 
   @override
   Future<BaseCbResult<User>> getUser(GetUserPayload payload) async {
@@ -170,6 +169,17 @@ class UserLocalRepository extends LocalRepository<User, int>
             callbackStatus: CallbackStatus.fail,
           );
       }
+    } catch (e) {
+      return const BaseCbResult(callbackStatus: CallbackStatus.fail);
+    }
+  }
+
+  @override
+  Future<BaseCbResult<DataType>> request<DataType>(
+      Future<DataType> Function() callback) async {
+    try {
+      final result = await callback();
+      return BaseCbResult(callbackStatus: CallbackStatus.success, data: result);
     } catch (e) {
       return const BaseCbResult(callbackStatus: CallbackStatus.fail);
     }

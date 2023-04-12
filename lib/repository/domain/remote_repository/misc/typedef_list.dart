@@ -10,3 +10,5 @@ typedef OnResponseDioInterceptor = void Function(
 
 typedef OnErrorDioInterceptor = void Function(
     DioError error, ErrorInterceptorHandler handler);
+
+typedef HeadersType = Map<String, dynamic>;

@@ -1,19 +1,15 @@
 library base_repository;
 
-import 'package:base_repository/callback_handler/base_callback_result.dart';
-import 'package:base_repository/callback_handler/typedef/client_callback_type.dart';
-import 'package:base_repository/interface/data_source.dart';
-import 'package:base_repository/remote_data_source/interface/api_url.dart';
-import 'package:base_repository/base_repository/typedef/headers_type.dart';
-import 'package:base_repository/base_repository/typedef/interceptors_types.dart';
-import 'package:base_repository/interface/dto.dart';
+import 'package:base_repository/callback_handler/model/base_callback_result.dart';
+import 'package:base_repository/callback_handler/misc/typedef_list.dart';
+import 'package:base_repository/repository/domain/repository.dart';
+import 'package:base_repository/repository/domain/remote_repository/misc/typedef_list.dart';
+import 'package:base_repository/repository/domain/remote_repository/model/api_url.dart';
+import 'package:base_repository/repository/domain/model/dto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
-abstract class RemoteRepository<
-    EntityType extends DTO,
-    ErrorsType,
-    CallbackResultType extends CallbackResult<DTO, ErrorsType>,
+abstract class RemoteRepository<BaseBody extends DTO,
     RepoSubType extends ApiUrl> extends Repository<RepoSubType> {
   final Dio dio = Dio();
 
@@ -52,11 +48,6 @@ abstract class RemoteRepository<
   }
 
   @protected
-  Future<CallbackResultType> request<T extends DTO>(
-      ClientCallback<EntityType> callback);
-
-  // @override
-  // Future<void> changeSubType(ApiUrl newSubType) async {
-  //   super.changeSubType(newSubType);
-  // }
+  Future<CallbackResult> request<T extends DTO>(
+      ClientCallback<BaseBody> callback);
 }

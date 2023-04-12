@@ -1,7 +1,7 @@
-import 'package:base_repository/interface/data_address.dart';
+import 'package:base_repository/repository/domain/model/repository_sub_type.dart';
 import 'package:flutter/foundation.dart';
 
-abstract class Repository<T extends DataSubType> {
+abstract class Repository<T extends RepositorySubType> {
   late T _subType;
   T get subType => _subType;
 

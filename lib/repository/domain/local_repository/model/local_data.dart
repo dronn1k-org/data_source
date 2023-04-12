@@ -1,4 +1,4 @@
-import 'package:base_repository/interface/dto.dart';
+import 'package:base_repository/repository/domain/model/dto.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class DTOWithLocalIdentifier<IdentifierType> extends DTO {

@@ -1,6 +1,6 @@
 library base_repository;
 
-import 'package:base_repository/callback_handler/enum/callback_status.dart';
+import 'package:base_repository/callback_handler/misc/enum_list.dart';
 import 'package:flutter/cupertino.dart';
 
 class CallbackResult<RESULT_TYPE, ERRORS_TYPE> {

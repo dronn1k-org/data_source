@@ -1,27 +1,26 @@
 import 'dart:async';
 
-import 'package:base_repository/callback_handler/typedef/json_type.dart';
-import 'package:base_repository/extension/list_extension.dart';
-import 'package:base_repository/interface/data_source.dart';
-import 'package:base_repository/local_data_source/enum/entity_exception_type.dart';
-import 'package:base_repository/local_data_source/exception/entity_exception.dart';
-import 'package:base_repository/local_data_source/interface/box_type.dart';
-import 'package:base_repository/local_data_source/model/local_data.dart';
+import 'package:base_repository/callback_handler/model/base_callback_result.dart';
+import 'package:base_repository/callback_handler/misc/typedef_list.dart';
+import 'package:base_repository/extension/iterable_extension.dart';
+import 'package:base_repository/repository/domain/repository.dart';
+import 'package:base_repository/repository/domain/local_repository/misc/enum_list.dart';
+import 'package:base_repository/repository/domain/local_repository/exception/entity_exception.dart';
+import 'package:base_repository/repository/domain/local_repository/model/local_data.dart';
+import 'package:base_repository/repository/domain/local_repository/model/box_type.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
 abstract class LocalRepository<
     MODEL_TYPE extends DTOWithLocalIdentifier<IdentifierType>,
-    IdentifierType> extends Repository<BoxType> {
+    IdentifierType,
+    RepoSubType extends BoxType> extends Repository<RepoSubType> {
   @protected
   abstract final String boxName;
 
-  @override
-  abstract final BoxType subType;
-
   String get _boxFullName => '$boxName-${subType.typeName}';
 
-  late Box<JSON_TYPE> _box;
+  late Box<Json> _box;
 
   @protected
   late Future<void> ready;
@@ -34,7 +33,7 @@ abstract class LocalRepository<
   }
 
   @protected
-  MODEL_TYPE fromJson(JSON_TYPE json);
+  MODEL_TYPE fromJson(Json json);
 
   Future<void> _initAsync() async => _box = Hive.isBoxOpen(_boxFullName)
       ? Hive.box(_boxFullName)
@@ -98,8 +97,11 @@ abstract class LocalRepository<
     return resultList.sublist(pageNumber * limit, (pageNumber + 1) * limit);
   }
 
+  Future<CallbackResult> request<DataType>(
+      Future<DataType> Function() callback);
+
   @override
-  Future<void> changeSubType(BoxType newSubType) async {
+  Future<void> changeSubType(RepoSubType newSubType) async {
     ready = _subTypeChangerCompleter.future;
     _box.flush();
     _box.close();

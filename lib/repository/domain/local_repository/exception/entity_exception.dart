@@ -1,4 +1,4 @@
-import 'package:base_repository/local_data_source/enum/entity_exception_type.dart';
+import 'package:base_repository/repository/domain/local_repository/misc/enum_list.dart';
 
 class EntityException implements Exception {
   final EntityExceptionType type;
