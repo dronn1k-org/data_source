@@ -39,21 +39,6 @@ class GeneralResponseBody<T extends DTO> extends DTO {
       };
 }
 
-class User extends DTOWithLocalIdentifier<int> {
-  final int id;
-  User({required this.id, required super.localId});
-
-  factory User.fromJson(Json json) => User(
-        id: json['id'],
-        localId: json['localId'],
-      );
-
-  @override
-  Json toJson() => {
-        'id': id,
-      };
-}
-
 class BaseCbResult<T> extends CallbackResult<T, String> {
   const BaseCbResult({
     required super.callbackStatus,
@@ -107,6 +92,23 @@ abstract class BaseRemoteRepository
   OnResponseDioInterceptor onResponse = (response, handler) {
     return handler.next(response);
   };
+}
+
+class User extends DTOWithLocalIdentifier<int> {
+  final int id;
+  @override
+  final int localId;
+  User({required this.id, required this.localId});
+
+  factory User.fromJson(Json json) => User(
+        id: json['id'],
+        localId: json['localId'],
+      );
+
+  @override
+  Json toJson() => {
+        'id': id,
+      };
 }
 
 class GetUserPayload {

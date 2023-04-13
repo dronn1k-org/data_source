@@ -11,8 +11,8 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
 abstract class LocalRepository<
-    MODEL_TYPE extends DTOWithLocalIdentifier<IdentifierType>,
-    IdentifierType,
+    MODEL_TYPE extends DTOWithLocalIdentifier<Identifier>,
+    Identifier,
     RepoSubType extends BoxSubType> extends Repository<RepoSubType> {
   @protected
   abstract final String boxName;
@@ -39,16 +39,17 @@ abstract class LocalRepository<
       : await Hive.openBox(_boxFullName);
 
   @protected
-  Future<void> create(MODEL_TYPE entity) async {
+  Future<MODEL_TYPE> create(MODEL_TYPE entity) async {
     await ready;
     if (_box.containsKey(entity.localId)) {
       throw const EntityAlreadyExists();
     }
-    return _box.put(entity.localId, entity.toJson());
+    await _box.put(entity.localId, entity.toJson());
+    return entity;
   }
 
   @protected
-  Future<MODEL_TYPE> read(IdentifierType id) async {
+  Future<MODEL_TYPE> read(Identifier id) async {
     await ready;
     final mapEntity = _box.get(id);
     if (mapEntity == null) {
@@ -71,7 +72,7 @@ abstract class LocalRepository<
   }
 
   @protected
-  Future<void> delete(IdentifierType id) async {
+  Future<void> delete(Identifier id) async {
     await ready;
     _box.delete(id);
   }
