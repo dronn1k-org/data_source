@@ -5,6 +5,7 @@ abstract class Repository<T extends RepositorySubType> {
   late T _subType;
   T get subType => _subType;
 
+  @mustCallSuper
   Repository(T subType) : _subType = subType;
 
   @mustCallSuper

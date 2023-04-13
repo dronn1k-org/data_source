@@ -19,6 +19,7 @@ class BaseCbResult<T> extends CallbackResult<T, String> {
 }
 
 enum BoxType implements BoxSubType {
+  prod('prod'),
   dev('dev');
 
   const BoxType(this.typeName);
@@ -188,6 +189,20 @@ void main() {
 
       final result = await userRepo.removeUser(const RemoveUserPayload(0));
       expect(result.isSuccess, true);
+    });
+
+    test('Creating an existed entity', () async {
+      final UserRepository userRepo = LocalUserRepository();
+      const payload = CreateUserPayload(
+        name: 'Name',
+        surname: 'Surname',
+        localId: 0,
+      );
+      await userRepo.createUser(payload);
+
+      final result = await userRepo.createUser(payload);
+
+      expect(result.isFail, true);
     });
   });
   tearDown(() async {

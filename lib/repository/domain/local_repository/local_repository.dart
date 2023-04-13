@@ -102,6 +102,7 @@ abstract class LocalRepository<
 
   @override
   Future<void> changeSubType(RepoSubType newSubType) async {
+    await ready;
     ready = _subTypeChangerCompleter.future;
     _box.flush();
     _box.close();
