@@ -84,7 +84,7 @@ abstract class LocalRepository<
     int limit = 10,
   }) async {
     await ready;
-    List<MODEL_TYPE> resultList = [];
+    final List<MODEL_TYPE> resultList = [];
     if (where != null) {
       resultList.addAll(_box.values.whereMap(
         where: where,
@@ -94,7 +94,13 @@ abstract class LocalRepository<
       resultList.addAll(_box.values.map(fromJson));
     }
     // TODO handle list length exceptions
-    return resultList.sublist(pageNumber * limit, (pageNumber + 1) * limit);
+    try {
+      return resultList.sublist(pageNumber * limit, (pageNumber + 1) * limit);
+    } catch (e) {
+      return (resultList.length - pageNumber * limit) > 0
+          ? resultList.sublist(pageNumber * limit, resultList.length)
+          : [];
+    }
   }
 
   Future<CallbackResult> request<DataType>(
