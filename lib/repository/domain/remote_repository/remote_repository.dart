@@ -42,7 +42,7 @@ abstract class RemoteRepository<BaseBody extends DTO,
       });
 
   @mustCallSuper
-  RemoteRepository() {
+  RemoteRepository(super.subType) {
     dio.options = baseDioOptions;
     dio.interceptors.add(_interceptor);
   }

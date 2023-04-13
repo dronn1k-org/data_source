@@ -5,6 +5,8 @@ abstract class Repository<T extends RepositorySubType> {
   late T _subType;
   T get subType => _subType;
 
+  Repository(T subType) : _subType = subType;
+
   @mustCallSuper
   Future<void> changeSubType(T newSubType) async => _subType = newSubType;
 }

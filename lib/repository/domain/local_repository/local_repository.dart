@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:base_repository/callback_handler/model/base_callback_result.dart';
 import 'package:base_repository/callback_handler/misc/typedef_list.dart';
 import 'package:base_repository/extension/iterable_extension.dart';
+import 'package:base_repository/repository/domain/local_repository/exception/local_repository_exception.dart';
 import 'package:base_repository/repository/domain/repository.dart';
-import 'package:base_repository/repository/domain/local_repository/misc/enum_list.dart';
-import 'package:base_repository/repository/domain/local_repository/exception/entity_exception.dart';
 import 'package:base_repository/repository/domain/local_repository/model/local_data.dart';
 import 'package:base_repository/repository/domain/local_repository/model/box_type.dart';
 import 'package:flutter/foundation.dart';
@@ -14,7 +13,7 @@ import 'package:hive/hive.dart';
 abstract class LocalRepository<
     MODEL_TYPE extends DTOWithLocalIdentifier<IdentifierType>,
     IdentifierType,
-    RepoSubType extends BoxType> extends Repository<RepoSubType> {
+    RepoSubType extends BoxSubType> extends Repository<RepoSubType> {
   @protected
   abstract final String boxName;
 
@@ -28,7 +27,7 @@ abstract class LocalRepository<
   final _subTypeChangerCompleter = Completer<void>();
 
   @mustCallSuper
-  LocalRepository() {
+  LocalRepository(super.subType) {
     ready = _initAsync();
   }
 
@@ -43,7 +42,7 @@ abstract class LocalRepository<
   Future<void> create(MODEL_TYPE entity) async {
     await ready;
     if (_box.containsKey(entity.localId)) {
-      throw const EntityException(EntityExceptionType.alreadyExists);
+      throw const EntityAlreadyExists();
     }
     return _box.put(entity.localId, entity.toJson());
   }
@@ -53,12 +52,12 @@ abstract class LocalRepository<
     await ready;
     final mapEntity = _box.get(id);
     if (mapEntity == null) {
-      throw const EntityException(EntityExceptionType.doNotExists);
+      throw const EntityDoNotExists();
     }
     try {
       return fromJson(mapEntity);
     } catch (e) {
-      throw const EntityException(EntityExceptionType.fromJsonFail);
+      throw const FromJsonFail();
     }
   }
 
@@ -66,7 +65,7 @@ abstract class LocalRepository<
   Future<void> update(MODEL_TYPE entity) async {
     await ready;
     if (!_box.containsKey(entity.localId)) {
-      throw const EntityException(EntityExceptionType.doNotExists);
+      throw const EntityDoNotExists();
     }
     return _box.put(entity.localId, entity.toJson());
   }
