@@ -117,14 +117,14 @@ class RemoveUserPayload {
   const RemoveUserPayload(this.id);
 }
 
-abstract class UserRepository<IdentifierType> {
+abstract class UserRepository {
   Future<BaseCbResult<User>> getUser(GetUserPayload payload);
   Future<BaseCbResult<User>> createUser(CreateUserPayload payload);
   Future<BaseCbResult<void>> removeUser(RemoveUserPayload payload);
 }
 
 class LocalUserRepository extends BaseLocalRepository<User>
-    implements UserRepository<String> {
+    implements UserRepository {
   @override
   String boxName = 'user';
 
