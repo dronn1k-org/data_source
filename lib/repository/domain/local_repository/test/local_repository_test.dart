@@ -7,7 +7,6 @@ import 'package:base_repository/callback_handler/misc/typedef_list.dart';
 import 'package:base_repository/callback_handler/model/base_callback_result.dart';
 import 'package:base_repository/repository/domain/local_repository/exception/local_repository_exception.dart';
 import 'package:base_repository/repository/domain/local_repository/local_repository.dart';
-import 'package:base_repository/repository/domain/local_repository/model/box_type.dart';
 import 'package:base_repository/repository/domain/local_repository/model/local_data.dart';
 
 class BaseCbResult<T> extends CallbackResult<T, String> {
@@ -16,19 +15,6 @@ class BaseCbResult<T> extends CallbackResult<T, String> {
     super.data,
     super.errors,
   });
-}
-
-enum BoxType implements BoxSubType {
-  prod('prod'),
-  dev('dev');
-
-  const BoxType(this.typeName);
-
-  @override
-  final String typeName;
-
-  @override
-  String toString() => typeName;
 }
 
 abstract class BaseDTO extends DTOWithLocalIdentifier<int> {
@@ -41,8 +27,8 @@ abstract class BaseDTO extends DTOWithLocalIdentifier<int> {
 }
 
 abstract class BaseLocalRepository<Entity extends DTOWithLocalIdentifier<int>>
-    extends LocalRepository<Entity, int, BoxType> {
-  BaseLocalRepository([super.subType = BoxType.dev]);
+    extends LocalRepository<Entity, int> {
+  BaseLocalRepository();
 
   @override
   Future<BaseCbResult<DataType>> request<DataType>(
