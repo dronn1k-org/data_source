@@ -23,87 +23,12 @@ TODO: List what your package can do. Maybe include images, gifs, or videos.
 ```yaml
 base_repository:
   version: ^0.1.1
-  git: git@github.com:dronn1k-org/base_repository.git
+  git: git@github.com:dronn1k-org/data_source.git
 ```
 
 ## Usage
 
-### Specify your own ApiUrls
 
-```dart
-enum ProjectApiUrl implements ApiUrl {
-  prod('https://prod.template.com',),
-  dev('https://dev.template.com');
-
-  const ProjectApiUrl(this.url);
-
-  @override
-  final String url;
-}
-```
-
-### Specify your response body (if needed)
-
-```dart
-class GeneralResponseBody<T extends DTO> extends BaseResponseBody {
-  String? success;
-  T? data;
-  String? message;
-}
-```
-
-### Specify your Callback result
-
-```dart
-class GeneralCbResult<T> extends BaseCallbackResult<T, String> {
-  const GeneralCbResult({
-    required super.callbackStatus,
-    super.statusCode,
-    super.data,
-    super.errors,
-  });
-}
-```
-
-### Setting up your General Repository
-
-```dart
-class GeneralRepository extends BaseRepository<GeneralResponseBody<DTO>, String,
-    GeneralCbResult<DTO>> {
-  @override
-  Future<GeneralCbResult<T>> request<T extends DTO>(
-      ClientCallback<GeneralResponseBody<DTO>> callback) async {
-    return GeneralCbResult<T>(
-      callbackStatus: ApiCallbackStatus.success,
-      data: (await callback()).data.data as T,
-    );
-  }
-
-  @override
-  ProjectApiUrl currentUrl = ProjectApiUrl.prod;
-
-  @override
-  HeadersType headers = {
-    'accept': 'application/json',
-    'content': 'application/json',
-  };
-
-  @override
-  OnErrorDioInterceptor onError = (error, handler) {
-    return handler.next(error);
-  };
-
-  @override
-  OnRequestDioInterceptor onRequest = (request, handler) {
-    return handler.next(request);
-  };
-
-  @override
-  OnResponseDioInterceptor onResponse = (response, handler) {
-    return handler.next(response);
-  };
-}
-```
 
 ## Additional information
 

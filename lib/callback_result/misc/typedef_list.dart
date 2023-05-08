@@ -1,4 +1,4 @@
-import 'package:base_repository/dto/src/model/dto.dart';
+import 'package:data_source/dto/dto.dart';
 import 'package:retrofit/dio.dart';
 
 typedef Json = Map<String, dynamic>;

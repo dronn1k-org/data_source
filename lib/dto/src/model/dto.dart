@@ -1,4 +1,4 @@
-import 'package:base_repository/callback_result/misc/typedef_list.dart';
+import 'package:data_source/callback_result/callback_result.dart';
 
 abstract class DTO {
   const DTO();

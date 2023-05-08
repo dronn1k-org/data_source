@@ -1,5 +1,6 @@
-import 'package:base_repository/callback_result/misc/enum_list.dart';
 import 'package:flutter/cupertino.dart';
+
+import '../misc/enum_list.dart';
 
 class CallbackResult<RESULT_TYPE, ERRORS_TYPE> {
   final CallbackStatus callbackStatus;

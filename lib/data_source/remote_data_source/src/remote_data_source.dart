@@ -1,5 +1,5 @@
-import 'package:base_repository/callback_result/callback_result.dart';
-import 'package:base_repository/dto/dto.dart';
+import 'package:data_source/callback_result/callback_result.dart';
+import 'package:data_source/dto/dto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 

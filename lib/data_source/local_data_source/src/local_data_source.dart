@@ -1,7 +1,6 @@
 import 'dart:async';
-
-import 'package:base_repository/callback_result/callback_result.dart';
-import 'package:base_repository/extension/iterable_extension.dart';
+import 'package:data_source/callback_result/callback_result.dart';
+import 'package:data_source/extension/iterable_extension.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
