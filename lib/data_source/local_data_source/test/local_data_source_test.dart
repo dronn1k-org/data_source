@@ -2,12 +2,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_test/hive_test.dart';
 
-import 'package:base_repository/callback_handler/misc/enum_list.dart';
-import 'package:base_repository/callback_handler/misc/typedef_list.dart';
-import 'package:base_repository/callback_handler/model/base_callback_result.dart';
-import 'package:base_repository/repository/domain/local_repository/exception/local_repository_exception.dart';
-import 'package:base_repository/repository/domain/local_repository/local_repository.dart';
-import 'package:base_repository/repository/domain/local_repository/model/local_data.dart';
+import 'package:base_repository/callback_result/misc/enum_list.dart';
+import 'package:base_repository/callback_result/misc/typedef_list.dart';
+import 'package:base_repository/callback_result/model/callback_result.dart';
+import 'package:base_repository/data_source/local_data_source/src/exception/local_data_source_exception.dart';
+import 'package:base_repository/data_source/local_data_source/src/local_data_source.dart';
+import 'package:base_repository/data_source/local_data_source/src/model/local_data.dart';
 
 class BaseCbResult<T> extends CallbackResult<T, String> {
   const BaseCbResult({
@@ -27,7 +27,7 @@ abstract class BaseDTO extends DTOWithLocalIdentifier<int> {
 }
 
 abstract class BaseLocalRepository<Entity extends DTOWithLocalIdentifier<int>>
-    extends LocalRepository<Entity, int> {
+    extends LocalDataSource<Entity, int> {
   BaseLocalRepository();
 
   @override

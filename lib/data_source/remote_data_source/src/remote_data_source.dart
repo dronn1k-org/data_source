@@ -1,13 +1,11 @@
-library base_repository;
-
-import 'package:base_repository/callback_handler/model/base_callback_result.dart';
-import 'package:base_repository/callback_handler/misc/typedef_list.dart';
-import 'package:base_repository/repository/domain/remote_repository/misc/typedef_list.dart';
-import 'package:base_repository/repository/domain/model/dto.dart';
+import 'package:base_repository/callback_result/callback_result.dart';
+import 'package:base_repository/dto/dto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
-abstract class RemoteRepository<BaseBody extends DTO> {
+import 'misc/typedef_list.dart';
+
+abstract class RemoteDataSource<BaseBody extends DTO> {
   final Dio dio = Dio();
 
   @protected
@@ -42,7 +40,7 @@ abstract class RemoteRepository<BaseBody extends DTO> {
       });
 
   @mustCallSuper
-  RemoteRepository() {
+  RemoteDataSource() {
     dio.options = baseDioOptions;
     dio.interceptors.add(_interceptor);
   }
