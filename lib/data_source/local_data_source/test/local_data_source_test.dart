@@ -4,7 +4,7 @@ import 'package:data_source/data_source/data_source.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_test/hive_test.dart';
 
-class BaseCbResult<T> extends CallbackResult<T, String> {
+base class BaseCbResult<T> extends CallbackResult<T, String> {
   const BaseCbResult({
     required super.callbackStatus,
     super.data,
@@ -21,7 +21,8 @@ abstract class BaseDTO extends DTOWithLocalIdentifier<int> {
   }) : localId = localId ?? DateTime.now().millisecondsSinceEpoch;
 }
 
-abstract class BaseLocalRepository<Entity extends DTOWithLocalIdentifier<int>>
+abstract base class BaseLocalRepository<
+        Entity extends DTOWithLocalIdentifier<int>>
     extends LocalDataSource<Entity, int> {
   BaseLocalRepository();
 
@@ -105,7 +106,7 @@ abstract class UserRepository {
   Future<BaseCbResult<void>> removeUser(RemoveUserPayload payload);
 }
 
-class LocalUserRepository extends BaseLocalRepository<User>
+final class LocalUserRepository extends BaseLocalRepository<User>
     implements UserRepository {
   @override
   String boxName = 'user';

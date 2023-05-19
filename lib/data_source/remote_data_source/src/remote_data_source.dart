@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'misc/typedef_list.dart';
 
-abstract class RemoteDataSource<BaseBody extends DTO> {
+abstract base class RemoteDataSource<BaseBody extends DTO> {
   final Dio dio = Dio();
 
   @protected
@@ -39,7 +39,6 @@ abstract class RemoteDataSource<BaseBody extends DTO> {
         return onError.call(error, handler);
       });
 
-  @mustCallSuper
   RemoteDataSource() {
     dio.options = baseDioOptions;
     dio.interceptors.add(_interceptor);
