@@ -7,7 +7,7 @@ import 'package:hive/hive.dart';
 import 'exception/local_data_source_exception.dart';
 import 'model/local_data.dart';
 
-abstract class LocalDataSource<
+abstract base class LocalDataSource<
     Entity extends DTOWithLocalIdentifier<Identifier>, Identifier> {
   @protected
   abstract final String boxName;
@@ -17,7 +17,6 @@ abstract class LocalDataSource<
   @protected
   late Future<void> ready;
 
-  @mustCallSuper
   LocalDataSource() {
     ready = _initAsync();
   }
