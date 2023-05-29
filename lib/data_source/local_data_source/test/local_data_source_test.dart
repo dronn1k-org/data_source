@@ -23,7 +23,7 @@ abstract class BaseDTO extends DTOWithLocalIdentifier<int> {
 
 abstract base class BaseLocalRepository<
         Entity extends DTOWithLocalIdentifier<int>>
-    extends LocalDataSource<Entity, int> {
+    extends LocalDataSource<Entity, int, String> {
   BaseLocalRepository();
 
   @override

@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'misc/typedef_list.dart';
 
-abstract base class RemoteDataSource<BaseBody extends DTO> {
+abstract base class RemoteDataSource<BaseBody extends DTO, Errors> {
   final Dio dio = Dio();
 
   @protected
@@ -45,6 +45,6 @@ abstract base class RemoteDataSource<BaseBody extends DTO> {
   }
 
   @protected
-  Future<CallbackResult> request<T extends DTO>(
+  Future<CallbackResult<T, Errors>> request<T extends DTO>(
       ClientCallback<BaseBody> callback);
 }

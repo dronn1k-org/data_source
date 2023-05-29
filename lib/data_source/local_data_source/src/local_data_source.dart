@@ -8,7 +8,7 @@ import 'exception/local_data_source_exception.dart';
 import 'model/local_data.dart';
 
 abstract base class LocalDataSource<
-    Entity extends DTOWithLocalIdentifier<Identifier>, Identifier> {
+    Entity extends DTOWithLocalIdentifier<Identifier>, Identifier, Errors> {
   @protected
   abstract final String boxName;
 
@@ -93,6 +93,6 @@ abstract base class LocalDataSource<
   }
 
   @protected
-  Future<CallbackResult> request<DataType>(
+  Future<CallbackResult<DataType, Errors>> request<DataType>(
       Future<DataType> Function() callback);
 }
