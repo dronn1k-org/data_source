@@ -45,6 +45,6 @@ abstract base class RemoteDataSource<BaseBody extends DTO, Errors> {
   }
 
   @protected
-  Future<CallbackResult<T, Errors>> request<T extends DTO>(
+  Future<CallbackResult<T?, Errors>> request<T>(
       ClientCallback<BaseBody> callback);
 }
