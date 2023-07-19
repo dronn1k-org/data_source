@@ -12,7 +12,7 @@ base class BaseCbResult<T> extends CallbackResult<T, String> {
   });
 }
 
-abstract class BaseDTO extends DTOWithLocalIdentifier<int> {
+abstract class BaseDTO implements DTOWithLocalIdentifier<int> {
   @override
   final int localId;
 

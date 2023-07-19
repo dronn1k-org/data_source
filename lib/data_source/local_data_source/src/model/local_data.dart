@@ -1,5 +1,5 @@
 import 'package:data_source/dto/dto.dart';
 
-abstract class DTOWithLocalIdentifier<Identifier> extends DTO {
+abstract interface class DTOWithLocalIdentifier<Identifier> implements DTO {
   abstract final Identifier localId;
 }
