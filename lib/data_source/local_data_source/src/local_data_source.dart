@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:data_source/callback_result/callback_result.dart';
 import 'package:data_source/extension/iterable_extension.dart';
 import 'package:flutter/foundation.dart';
@@ -7,8 +8,7 @@ import 'package:hive/hive.dart';
 import 'exception/local_data_source_exception.dart';
 import 'model/local_data.dart';
 
-abstract base class LocalDataSource<
-    Entity extends DTOWithLocalIdentifier<Identifier>, Identifier, Errors> {
+abstract base class LocalDataSource<Entity extends LocalEntity, Errors> {
   @protected
   abstract final String boxName;
 
@@ -21,6 +21,8 @@ abstract base class LocalDataSource<
     ready = _initAsync();
   }
 
+  String? get lastEntityKey => _box.isNotEmpty ? _box.toMap().keys.last : null;
+
   @protected
   Entity fromJson(Json json);
 
@@ -28,7 +30,7 @@ abstract base class LocalDataSource<
       Hive.isBoxOpen(boxName) ? Hive.box(boxName) : await Hive.openBox(boxName);
 
   @protected
-  Future<Entity> create(Entity entity) async {
+  Future<Entity> createEntity(Entity entity) async {
     await ready;
     if (_box.containsKey(entity.localId)) {
       throw const EntityAlreadyExists();
@@ -38,7 +40,7 @@ abstract base class LocalDataSource<
   }
 
   @protected
-  Future<Entity> read(Identifier id) async {
+  Future<Entity> readEntityById(String id) async {
     await ready;
     final mapEntity = _box.get(id);
     if (mapEntity == null) {
@@ -52,7 +54,7 @@ abstract base class LocalDataSource<
   }
 
   @protected
-  Future<void> update(Entity entity) async {
+  Future<void> updateEntity(Entity entity) async {
     await ready;
     if (!_box.containsKey(entity.localId)) {
       throw const EntityDoNotExists();
@@ -61,13 +63,13 @@ abstract base class LocalDataSource<
   }
 
   @protected
-  Future<void> delete(Identifier id) async {
+  Future<void> deleteEntityById(String id) async {
     await ready;
     _box.delete(id);
   }
 
   @protected
-  Future<List<Entity>> getList({
+  Future<List<Entity>> readWhereEntity({
     bool Function(Entity entity)? where,
     int pageNumber = 0,
     int limit = 10,
@@ -91,8 +93,4 @@ abstract base class LocalDataSource<
           : [];
     }
   }
-
-  @protected
-  Future<CallbackResult<DataType, Errors>> request<DataType>(
-      Future<DataType> Function() callback);
 }

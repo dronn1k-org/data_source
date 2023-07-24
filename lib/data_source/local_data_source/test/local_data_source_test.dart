@@ -12,21 +12,19 @@ base class BaseCbResult<T> extends CallbackResult<T, String> {
   });
 }
 
-abstract class BaseDTO implements DTOWithLocalIdentifier<int> {
+abstract class BaseDTO implements LocalEntity {
   @override
-  final int localId;
+  final String localId;
 
   BaseDTO({
-    int? localId,
-  }) : localId = localId ?? DateTime.now().millisecondsSinceEpoch;
+    String? localId,
+  }) : localId = localId ?? DateTime.now().millisecondsSinceEpoch.toString();
 }
 
-abstract base class BaseLocalRepository<
-        Entity extends DTOWithLocalIdentifier<int>>
-    extends LocalDataSource<Entity, int, String> {
+abstract base class BaseLocalRepository<Entity extends LocalEntity>
+    extends LocalDataSource<Entity, String> {
   BaseLocalRepository();
 
-  @override
   Future<BaseCbResult<DataType>> request<DataType>(
       Future<DataType> Function() callback) async {
     try {
@@ -51,7 +49,7 @@ abstract base class BaseLocalRepository<
 }
 
 class User extends BaseDTO {
-  final int? id;
+  final String? id;
   final String name;
   final String surname;
 
@@ -79,14 +77,14 @@ class User extends BaseDTO {
 }
 
 class GetUserPayload {
-  final int id;
+  final String id;
   const GetUserPayload(this.id);
 }
 
 class CreateUserPayload {
   final String name;
   final String surname;
-  final int localId;
+  final String localId;
 
   const CreateUserPayload({
     required this.name,
@@ -96,7 +94,7 @@ class CreateUserPayload {
 }
 
 class RemoveUserPayload {
-  final int id;
+  final String id;
   const RemoveUserPayload(this.id);
 }
 
@@ -116,11 +114,11 @@ final class LocalUserRepository extends BaseLocalRepository<User>
 
   @override
   Future<BaseCbResult<User>> getUser(GetUserPayload payload) =>
-      request(() => read(payload.id));
+      request(() => readEntityById(payload.id));
 
   @override
   Future<BaseCbResult<User>> createUser(CreateUserPayload payload) =>
-      request(() => create(User(
+      request(() => createEntity(User(
             name: payload.name,
             surname: payload.surname,
             localId: payload.localId,
@@ -128,7 +126,7 @@ final class LocalUserRepository extends BaseLocalRepository<User>
 
   @override
   Future<BaseCbResult<void>> removeUser(RemoveUserPayload payload) {
-    return request(() => delete(payload.id));
+    return request(() => deleteEntityById(payload.id));
   }
 }
 
@@ -142,7 +140,7 @@ void main() {
       const payload = CreateUserPayload(
         name: 'Name',
         surname: 'Surname',
-        localId: 0,
+        localId: 'asd',
       );
       final result = await userRepo.createUser(payload);
       expect(result.data?.name, payload.name);
@@ -152,11 +150,11 @@ void main() {
       const payload = CreateUserPayload(
         name: 'Name',
         surname: 'Surname',
-        localId: 0,
+        localId: 'asd',
       );
       await userRepo.createUser(payload);
 
-      final result = await userRepo.getUser(const GetUserPayload(0));
+      final result = await userRepo.getUser(const GetUserPayload('asd'));
       expect(result.data?.name, payload.name);
     });
     test('Removing entity test', () async {
@@ -164,12 +162,12 @@ void main() {
       const payload = CreateUserPayload(
         name: 'Name',
         surname: 'Surname',
-        localId: 0,
+        localId: 'asd',
       );
       await userRepo.createUser(payload);
-      await userRepo.getUser(const GetUserPayload(0));
+      await userRepo.getUser(const GetUserPayload('asd'));
 
-      final result = await userRepo.removeUser(const RemoveUserPayload(0));
+      final result = await userRepo.removeUser(const RemoveUserPayload('asd'));
       expect(result.isSuccess, true);
     });
 
@@ -178,7 +176,7 @@ void main() {
       const payload = CreateUserPayload(
         name: 'Name',
         surname: 'Surname',
-        localId: 0,
+        localId: 'asd',
       );
       await userRepo.createUser(payload);
 
