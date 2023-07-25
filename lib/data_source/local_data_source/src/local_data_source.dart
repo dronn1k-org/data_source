@@ -8,7 +8,7 @@ import 'package:hive/hive.dart';
 import 'exception/local_data_source_exception.dart';
 import 'model/local_data.dart';
 
-abstract base class LocalDataSource<Entity extends LocalEntity, Errors> {
+abstract base class LocalDataSource<Entity extends LocalEntity> {
   @protected
   abstract final String boxName;
 

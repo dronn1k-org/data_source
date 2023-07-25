@@ -22,7 +22,7 @@ abstract class BaseDTO implements LocalEntity {
 }
 
 abstract base class BaseLocalRepository<Entity extends LocalEntity>
-    extends LocalDataSource<Entity, String> {
+    extends LocalDataSource<Entity> {
   BaseLocalRepository();
 
   Future<BaseCbResult<DataType>> request<DataType>(
