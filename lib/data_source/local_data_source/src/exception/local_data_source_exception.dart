@@ -1,13 +1,19 @@
-abstract class LocalRepositoryException implements Exception {}
+sealed class LocalDataSourceException implements Exception {}
 
-class EntityDoNotExists implements LocalRepositoryException {
-  const EntityDoNotExists();
+class EntityDoNotExists implements LocalDataSourceException {
+  const EntityDoNotExists(this.localId);
+
+  final String localId;
 }
 
-class EntityAlreadyExists implements LocalRepositoryException {
-  const EntityAlreadyExists();
+class EntityAlreadyExists implements LocalDataSourceException {
+  const EntityAlreadyExists(this.json);
+
+  final Map<String, dynamic> json;
 }
 
-class FromJsonFail implements LocalRepositoryException {
-  const FromJsonFail();
+class FromJsonFail implements LocalDataSourceException {
+  const FromJsonFail(this.json);
+
+  final Map<String, dynamic> json;
 }

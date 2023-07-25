@@ -32,24 +32,25 @@ abstract base class LocalDataSource<Entity extends LocalEntity> {
   @protected
   Future<Entity> createEntity(Entity entity) async {
     await ready;
+    final mappedEntity = entity.toJson();
     if (_box.containsKey(entity.localId)) {
-      throw const EntityAlreadyExists();
+      throw EntityAlreadyExists(mappedEntity);
     }
-    await _box.put(entity.localId, entity.toJson());
+    await _box.put(entity.localId, mappedEntity);
     return entity;
   }
 
   @protected
   Future<Entity> readEntityById(String id) async {
     await ready;
-    final mapEntity = _box.get(id);
-    if (mapEntity == null) {
-      throw const EntityDoNotExists();
+    final mappedEntity = _box.get(id);
+    if (mappedEntity == null) {
+      throw EntityDoNotExists(id);
     }
     try {
-      return fromJson(mapEntity);
+      return fromJson(mappedEntity);
     } catch (e) {
-      throw const FromJsonFail();
+      throw FromJsonFail(mappedEntity);
     }
   }
 
@@ -57,7 +58,7 @@ abstract base class LocalDataSource<Entity extends LocalEntity> {
   Future<void> updateEntity(Entity entity) async {
     await ready;
     if (!_box.containsKey(entity.localId)) {
-      throw const EntityDoNotExists();
+      throw EntityDoNotExists(entity.localId);
     }
     return _box.put(entity.localId, entity.toJson());
   }
