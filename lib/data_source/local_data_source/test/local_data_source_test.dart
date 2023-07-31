@@ -14,7 +14,7 @@ base class BaseCbResult<T> extends CallbackResult<T, String> {
 
 abstract class BaseDTO implements LocalEntity {
   @override
-  final String localId;
+  String? localId;
 
   BaseDTO({
     String? localId,
@@ -118,7 +118,7 @@ final class LocalUserRepository extends BaseLocalRepository<User>
 
   @override
   Future<BaseCbResult<User>> createUser(CreateUserPayload payload) =>
-      request(() => createEntity(User(
+      request(() => addEntity(User(
             name: payload.name,
             surname: payload.surname,
             localId: payload.localId,

@@ -30,13 +30,15 @@ abstract base class LocalDataSource<Entity extends LocalEntity> {
       Hive.isBoxOpen(boxName) ? Hive.box(boxName) : await Hive.openBox(boxName);
 
   @protected
-  Future<Entity> createEntity(Entity entity) async {
+  Future<Entity> addEntity(Entity entity) async {
     await ready;
     final mappedEntity = entity.toJson();
-    if (_box.containsKey(entity.localId)) {
+    final localId = entity.localId;
+    if (localId == null) throw IdentifierIsNull(mappedEntity);
+    if (_box.containsKey(localId)) {
       throw EntityAlreadyExists(mappedEntity);
     }
-    await _box.put(entity.localId, mappedEntity);
+    await _box.put(localId, mappedEntity);
     return entity;
   }
 
@@ -57,10 +59,13 @@ abstract base class LocalDataSource<Entity extends LocalEntity> {
   @protected
   Future<void> updateEntity(Entity entity) async {
     await ready;
-    if (!_box.containsKey(entity.localId)) {
-      throw EntityDoNotExists(entity.localId);
+    final localId = entity.localId;
+    final mappedEntity = entity.toJson();
+    if (localId == null) throw IdentifierIsNull(mappedEntity);
+    if (!_box.containsKey(localId)) {
+      throw EntityDoNotExists(localId);
     }
-    return _box.put(entity.localId, entity.toJson());
+    return _box.put(localId, mappedEntity);
   }
 
   @protected

@@ -6,6 +6,12 @@ class EntityDoNotExists implements LocalDataSourceException {
   final String localId;
 }
 
+class IdentifierIsNull implements LocalDataSourceException {
+  const IdentifierIsNull(this.json);
+
+  final Map<String, dynamic> json;
+}
+
 class EntityAlreadyExists implements LocalDataSourceException {
   const EntityAlreadyExists(this.json);
 
