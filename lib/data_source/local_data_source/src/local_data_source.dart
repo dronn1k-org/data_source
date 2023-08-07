@@ -99,4 +99,9 @@ abstract base class LocalDataSource<Entity extends LocalEntity> {
           : [];
     }
   }
+
+  Future<void> clearStorage() async {
+    await ready;
+    await _box.clear();
+  }
 }
