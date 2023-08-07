@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:data_source/callback_result/callback_result.dart';
 import 'package:data_source/extension/iterable_extension.dart';
@@ -85,11 +86,12 @@ abstract base class LocalDataSource<Entity extends LocalEntity> {
     if (where != null) {
       resultList.addAll(_box.values.whereMap(
         where: where,
-        map: (element) => fromJson(element as Map<String, dynamic>),
+        map: (element) =>
+            fromJson(jsonDecode(jsonEncode(element)) as Map<String, dynamic>),
       ));
     } else {
-      resultList.addAll(_box.values
-          .map((element) => fromJson(element as Map<String, dynamic>)));
+      resultList.addAll(_box.values.map((element) =>
+          fromJson(jsonDecode(jsonEncode(element)) as Map<String, dynamic>)));
     }
     // TODO handle list length exceptions
     try {
