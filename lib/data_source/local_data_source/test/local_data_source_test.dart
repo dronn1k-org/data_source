@@ -102,6 +102,8 @@ abstract class UserRepository {
   Future<BaseCbResult<User>> getUser(GetUserPayload payload);
   Future<BaseCbResult<User>> createUser(CreateUserPayload payload);
   Future<BaseCbResult<void>> removeUser(RemoveUserPayload payload);
+
+  Future<BaseCbResult<List<User>>> getAll();
 }
 
 final class LocalUserRepository extends BaseLocalRepository<User>
@@ -128,6 +130,9 @@ final class LocalUserRepository extends BaseLocalRepository<User>
   Future<BaseCbResult<void>> removeUser(RemoveUserPayload payload) {
     return request(() => deleteEntityById(payload.id));
   }
+
+  @override
+  Future<BaseCbResult<List<User>>> getAll() => request(() => readWhereEntity());
 }
 
 void main() {
@@ -183,6 +188,19 @@ void main() {
       final result = await userRepo.createUser(payload);
 
       expect(result.isFail, true);
+    });
+
+    test('Get All entities', () async {
+      final UserRepository userRepo = LocalUserRepository();
+      const payload = CreateUserPayload(
+        name: 'Name',
+        surname: 'Surname',
+        localId: 'asd',
+      );
+      await userRepo.createUser(payload);
+      final result = await userRepo.getAll();
+
+      expect(result.data?.length, 1);
     });
   });
   tearDown(() async {
