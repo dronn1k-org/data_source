@@ -12,7 +12,7 @@ abstract base class LocalDataSource<Entity extends LocalEntity> {
   @protected
   abstract final String boxName;
 
-  late Box<Json> _box;
+  late Box<Map> _box;
 
   @protected
   late Future<void> ready;
@@ -50,9 +50,9 @@ abstract base class LocalDataSource<Entity extends LocalEntity> {
       throw EntityDoNotExists(id);
     }
     try {
-      return fromJson(mappedEntity);
+      return fromJson(mappedEntity as Json);
     } catch (e) {
-      throw FromJsonFail(mappedEntity);
+      throw FromJsonFail(mappedEntity as Json);
     }
   }
 
