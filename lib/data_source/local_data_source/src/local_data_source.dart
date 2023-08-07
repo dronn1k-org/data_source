@@ -83,12 +83,13 @@ abstract base class LocalDataSource<Entity extends LocalEntity> {
     await ready;
     final List<Entity> resultList = [];
     if (where != null) {
-      resultList.addAll(_box.values.cast<Json>().whereMap(
-            where: where,
-            map: fromJson,
-          ));
+      resultList.addAll(_box.values.whereMap(
+        where: where,
+        map: (element) => fromJson(element as Map<String, dynamic>),
+      ));
     } else {
-      resultList.addAll(_box.values.cast<Json>().map(fromJson));
+      resultList.addAll(_box.values
+          .map((element) => fromJson(element as Map<String, dynamic>)));
     }
     // TODO handle list length exceptions
     try {
