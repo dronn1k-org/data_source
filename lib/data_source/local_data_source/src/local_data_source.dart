@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_cast
-
 import 'dart:async';
 
 import 'package:data_source/callback_result/callback_result.dart';
@@ -85,13 +83,12 @@ abstract base class LocalDataSource<Entity extends LocalEntity> {
     await ready;
     final List<Entity> resultList = [];
     if (where != null) {
-      resultList.addAll(_box.values.whereMap(
-        where: where,
-        map: (element) => fromJson((element as Map<String, dynamic>)),
-      ));
+      resultList.addAll(_box.values.cast<Json>().whereMap(
+            where: where,
+            map: fromJson,
+          ));
     } else {
-      resultList.addAll(_box.values
-          .map((element) => fromJson((element as Map<String, dynamic>))));
+      resultList.addAll(_box.values.cast<Json>().map(fromJson));
     }
     // TODO handle list length exceptions
     try {
